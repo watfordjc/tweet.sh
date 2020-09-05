@@ -1456,6 +1456,24 @@ get_screen_name_from_user_id() {
   check_errors "$result"
 }
 
+get_profile_image_from_screen_name() {
+  ensure_available
+  local params="screen_name $1"
+  local result="$(echo "$params" |
+                    call_api GET https://api.twitter.com/1.1/users/show.json)"
+  echo -n "$result" | jq -r .profile_image_url_https
+  check_errors "$result"
+}
+
+get_profile_image_from_user_id() {
+  ensure_available
+  local params="user_id $1"
+  local result="$(echo "$params" |
+                    call_api GET https://api.twitter.com/1.1/users/show.json)"
+  echo -n "$result" | jq -r .profile_image_url_https
+  check_errors "$result"
+}
+
 
 
 #================================================================
@@ -1879,6 +1897,14 @@ then
 
     get-screen-name )
       get_screen_name_from_user_id "$1"
+      ;;
+
+    get-profile-image-from-screen-name )
+      get_profile_image_from_screen_name "$1"
+      ;;
+
+    get-profile-image-from-user-id )
+      get_profile_image_from_user_id "$1"
       ;;
 
     resolve )
